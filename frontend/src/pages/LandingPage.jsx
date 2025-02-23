@@ -1,8 +1,19 @@
-import React, { useState } from "react";
-import { Edit3, ChevronRight, Menu, X, Sparkles } from "lucide-react";
+import React, { useContext, useState} from "react"
+import { Edit3, ChevronRight, Menu, X, Sparkles } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { UserDataContext } from "../context/UserContext"
 
 const LandingPage = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
+  const { user, setUser } = useContext(UserDataContext)
+  console.log(user)
+
+  const handleLogout = () => {
+    setUser(null)
+    localStorage.removeItem("token")
+    navigate("/")
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col justify-between">
@@ -11,28 +22,42 @@ const LandingPage = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Edit3 className="h-8 w-8 text-blue-600" />
-            <span className="ml-2 text-2xl font-bold text-gray-800">
-              LingoSavvy
-            </span>
+            <span className="ml-2 text-2xl font-bold text-gray-800">LingoSavvy</span>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <button className="px-4 py-2 text-blue-600 font-medium hover:underline">
-              Login
-            </button>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              Sign Up Free
-            </button>
+            {user ? (
+              <>
+                <span className="text-gray-600">Welcome, {user.username}</span>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="px-4 py-2 text-blue-600 font-medium hover:underline"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Sign Up Free
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? (
-                <X className="h-6 w-6 text-gray-600" />
-              ) : (
-                <Menu className="h-6 w-6 text-gray-600" />
-              )}
+              {isMenuOpen ? <X className="h-6 w-6 text-gray-600" /> : <Menu className="h-6 w-6 text-gray-600" />}
             </button>
           </div>
         </div>
@@ -41,14 +66,32 @@ const LandingPage = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 bg-white rounded-lg shadow-lg p-4">
             <div className="flex flex-col space-y-3">
-              <div className="pt-3">
-                <button className="w-full mb-2 py-2 text-blue-600 font-medium hover:bg-blue-50 rounded">
-                  Login
-                </button>
-                <button className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  Sign Up Free
-                </button>
-              </div>
+              {user ? (
+                <>
+                  <span className="text-gray-600">Welcome, {user.username}</span>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="px-4 py-2 text-blue-600 font-medium hover:underline"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => navigate("/register")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Sign Up Free
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -59,12 +102,11 @@ const LandingPage = () => {
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-10 md:mb-0">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
-              Elevate Your Writing with{" "}
-              <span className="text-blue-600">AI-Powered</span> Precision
+              Elevate Your Writing with <span className="text-blue-600">AI-Powered</span> Precision
             </h1>
             <p className="mt-4 text-xl text-gray-600">
-              LingoSavvy helps you write clear, error-free, and impactful
-              content with advanced grammar checking and style suggestions.
+              LingoSavvy helps you write clear, error-free, and impactful content with advanced grammar checking and
+              style suggestions.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <button
@@ -80,10 +122,8 @@ const LandingPage = () => {
             <div className="bg-white rounded-xl shadow-xl p-6 relative">
               <div className="bg-gray-100 rounded-lg p-4">
                 <p className="text-gray-800">
-                  The team <span className="bg-yellow-100 px-1">wer</span>{" "}
-                  excited about the new product launch, despite{" "}
-                  <span className="bg-red-100 px-1">there</span> concerns about
-                  market readiness.
+                  The team <span className="bg-yellow-100 px-1">wer</span> excited about the new product launch, despite{" "}
+                  <span className="bg-red-100 px-1">there</span> concerns about market readiness.
                 </p>
                 <div className="mt-4 bg-white rounded-lg p-3 shadow-sm">
                   <div className="flex items-start">
@@ -91,14 +131,10 @@ const LandingPage = () => {
                       <Sparkles className="h-5 w-5 text-blue-600" />
                     </div>
                     <div className="ml-3">
-                      <p className="text-sm font-medium text-gray-900">
-                        LingoSavvy suggests:
-                      </p>
+                      <p className="text-sm font-medium text-gray-900">LingoSavvy suggests:</p>
                       <p className="text-sm text-gray-700">
-                        "The team <span className="text-green-600">was</span>{" "}
-                        excited about the new product launch, despite{" "}
-                        <span className="text-green-600">their</span> concerns
-                        about market readiness."
+                        "The team <span className="text-green-600">was</span> excited about the new product launch,
+                        despite <span className="text-green-600">their</span> concerns about market readiness."
                       </p>
                     </div>
                   </div>
@@ -116,7 +152,8 @@ const LandingPage = () => {
         </div>
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default LandingPage;
+export default LandingPage
+

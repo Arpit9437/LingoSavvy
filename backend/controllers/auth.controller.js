@@ -32,7 +32,7 @@ export const registerUser = async (req, res) => {
       { expiresIn: "1h" },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.status(201).json({ token, user });
       }
     );
   } catch (error) {
@@ -67,9 +67,10 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1h" },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.status(200).json({ token, user });
       }
     );
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
