@@ -43,18 +43,23 @@ const TextEditor = () => {
         }
       });
 
-      // Parse the JSON string from the backend response
-      let parsedResult;
-      try {
-        parsedResult = JSON.parse(response.data.textres);
-      } catch (e) {
-        console.error("Failed to parse JSON response:", e);
-        setError("Received invalid response format from server");
-        setIsLoading(false);
-        return;
+      // The response from the server contains a JSON string in textres property
+      // that needs to be parsed
+      if (response.data && response.data.textres) {
+        try {
+          // Check if the textres is already a JSON object or a string that needs parsing
+          const parsedResult = typeof response.data.textres === 'string' 
+            ? JSON.parse(response.data.textres)
+            : response.data.textres;
+            
+          setAnalysisResult(parsedResult);
+        } catch (e) {
+          console.error("Failed to parse JSON response:", e, response.data.textres);
+          setError("Received invalid response format from server");
+        }
+      } else {
+        setError("No analysis data received from server");
       }
-
-      setAnalysisResult(parsedResult);
     } catch (err) {
       console.error("Analysis error:", err);
       setError(err.response?.data?.message || "Failed to analyze text");
@@ -175,6 +180,7 @@ const TextEditor = () => {
                       ${change.type === 'grammar' ? 'bg-red-100 text-red-800' : 
                         change.type === 'clarity' ? 'bg-blue-100 text-blue-800' :
                         change.type === 'vocabulary' ? 'bg-purple-100 text-purple-800' :
+                        change.type === 'punctuation' ? 'bg-amber-100 text-amber-800' :
                         'bg-yellow-100 text-yellow-800'}`}>
                       {change.type}
                     </span>
